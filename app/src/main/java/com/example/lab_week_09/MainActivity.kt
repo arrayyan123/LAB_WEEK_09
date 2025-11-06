@@ -10,10 +10,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Button
+// Hapus impor 'Button' dan 'Text' dari material3 jika tidak digunakan lagi di file ini
+// import androidx.compose.material3.Button
+// import androidx.compose.material3.Text
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
@@ -26,11 +27,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+// Impor composable baru
+import com.example.lab_week_09.ui.theme.OnBackgroundItemText
+import com.example.lab_week_09.ui.theme.OnBackgroundTitleText
+import com.example.lab_week_09.ui.theme.PrimaryTextButton
 import com.example.lab_week_09.ui.theme.LAB_WEEK_09Theme
 
-// [cite: 239]
-data class Student( // [cite: 240]
-    var name: String // [cite: 241]
+data class Student(
+    var name: String
 )
 
 class MainActivity : ComponentActivity() {
@@ -39,10 +43,10 @@ class MainActivity : ComponentActivity() {
         setContent {
             LAB_WEEK_09Theme {
                 Surface(
-                    modifier = Modifier.fillMaxSize(), // [cite: 386-388]
-                    color = MaterialTheme.colorScheme.background // [cite: 389-391]
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
                 ) {
-                    Home() // [cite: 393]
+                    Home()
                 }
             }
         }
@@ -50,91 +54,88 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Home() { // [cite: 247]
-    // State untuk list, menggunakan remember agar tidak reset saat recomposition [cite: 248-250]
-    val listData = remember { // [cite: 260]
-        mutableStateListOf( // [cite: 255]
-            Student("Tanu"), // [cite: 262]
-            Student("Tina"), // [cite: 263]
-            Student("Tono") // [cite: 264]
+fun Home() {
+    val listData = remember {
+        mutableStateListOf(
+            Student("Tanu"),
+            Student("Tina"),
+            Student("Tono")
         )
     }
 
-    // State untuk input field [cite: 265-266]
-    var inputField = remember { mutableStateOf(Student("")) } // [cite: 267]
+    var inputField = remember { mutableStateOf(Student("")) }
 
-    // Memanggil composable content, meneruskan state dan event handler [cite: 268-273]
     HomeContent(
-        listData = listData, // [cite: 274]
-        inputField = inputField.value, // [cite: 275]
-        onInputValueChange = { input -> inputField.value = inputField.value.copy(name = input) }, // [cite: 276]
-        onButtonClick = { // [cite: 278]
-            if (inputField.value.name.isNotBlank()) { // [cite: 279]
-                listData.add(inputField.value) // [cite: 277]
+        listData = listData,
+        inputField = inputField.value,
+        onInputValueChange = { input -> inputField.value = inputField.value.copy(name = input) },
+        onButtonClick = {
+            if (inputField.value.name.isNotBlank()) {
+                listData.add(inputField.value)
             }
-            inputField.value = Student("") // [cite: 281]
+            inputField.value = Student("")
         }
     )
 }
 
-// Composable baru yang berisi UI, dipisahkan dari logic state [cite: 291-292]
+// Perbarui HomeContent untuk menggunakan UI Elements yang baru
 @Composable
 fun HomeContent(
-    listData: SnapshotStateList<Student>, // [cite: 295]
-    inputField: Student, // [cite: 296]
-    onInputValueChange: (String) -> Unit, // [cite: 297]
-    onButtonClick: () -> Unit // [cite: 298]
+    listData: SnapshotStateList<Student>,
+    inputField: Student,
+    onInputValueChange: (String) -> Unit,
+    onButtonClick: () -> Unit
 ) {
-    LazyColumn { // [cite: 299]
-        item { // [cite: 300]
-            Column(
+    LazyColumn { // [cite: 477]
+        item { // [cite: 478]
+            Column( // [cite: 479]
                 modifier = Modifier
-                    .padding(16.dp) // [cite: 311]
-                    .fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally // [cite: 312, 316]
+                    .padding(16.dp) // [cite: 487]
+                    .fillMaxSize(), // [cite: 488]
+                horizontalAlignment = Alignment.CenterHorizontally // [cite: 493]
             ) {
-                Text(
-                    text = stringResource(id = R.string.enter_item) // [cite: 317-320]
+                // Menggunakan UI Element kustom [cite: 496]
+                OnBackgroundTitleText(
+                    text = stringResource(id = R.string.enter_item) // [cite: 497-499]
                 )
 
-                TextField(
-                    value = inputField.name, // [cite: 323]
+                TextField( // [cite: 500]
+                    value = inputField.name, // [cite: 502]
                     keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Text // [cite: 325-327]
+                        keyboardType = KeyboardType.Text // [cite: 505, 507]
                     ),
                     onValueChange = {
-                        onInputValueChange(it) // [cite: 338, 344]
-                    }
-                )
+                        onInputValueChange(it) // [cite: 513]
+                    } // [cite: 514]
+                ) // [cite: 515]
 
-                Button(onClick = {
-                    onButtonClick() // [cite: 348, 352]
-                }) {
-                    Text(text = stringResource(id = R.string.button_click)) // [cite: 355, 361]
-                }
-            }
-        }
+                // Menggunakan UI Element kustom [cite: 516]
+                PrimaryTextButton(
+                    text = stringResource(id = R.string.button_click), // [cite: 517-519]
+                    onClick = { onButtonClick() } // [cite: 521]
+                ) // [cite: 522]
+            } // [cite: 523]
+        } // [cite: 524]
 
-        // Menampilkan list dari state [cite: 362-365]
-        items(listData) { item -> // [cite: 366]
-            Column(
+        items(listData) { item -> // [cite: 530]
+            Column( // [cite: 531]
                 modifier = Modifier
-                    .padding(vertical = 4.dp) // [cite: 368]
-                    .fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally // [cite: 368]
+                    .padding(vertical = 4.dp) // [cite: 535-536]
+                    .fillMaxSize(), // [cite: 537]
+                horizontalAlignment = Alignment.CenterHorizontally // [cite: 538]
             ) {
-                Text(text = item.name) // [cite: 371]
+                // Menggunakan UI Element kustom [cite: 540]
+                OnBackgroundItemText(text = item.name) // [cite: 541]
             }
         }
     }
 }
 
 
-@Preview(showBackground = true) // [cite: 198]
+@Preview(showBackground = true)
 @Composable
 fun PreviewHome() {
     LAB_WEEK_09Theme {
-        // Home() sekarang mengelola state-nya sendiri, jadi tidak perlu parameter
         Home()
     }
 }
